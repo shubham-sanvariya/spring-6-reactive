@@ -6,7 +6,7 @@ import shubh.springframework.spring6reactive.model.BeerDTO;
 
 @Mapper
 public interface BeerMapper {
-    Beer beertoDTObeer(BeerDTO dto);
+    Beer beerDTOtobeer(BeerDTO dto);
 
     BeerDTO beerToBeerDto(Beer beer);
 }
