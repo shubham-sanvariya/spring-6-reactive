@@ -22,6 +22,15 @@ public class BeerController {
        return beerService.deleteBeerById(beerId).map(response -> ResponseEntity.noContent().build());
     }
 
+    //The @ResponseBody annotation tells a controller that the object returned is automatically serialized into JSON and passed back into the HttpResponse object
+    // updating  selected portion of our existing resource
+    @PatchMapping(BEER_PATH_ID)
+    Mono<ResponseEntity<Void>> patchExistingBeer(@PathVariable Integer beerId,
+                                         @RequestBody BeerDTO beerDTO){
+        return beerService.patchBeer(beerId,beerDTO)
+                .map(updatedDTO -> ResponseEntity.ok().build());
+    }
+
     // update our existing resource
     @PutMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId,
