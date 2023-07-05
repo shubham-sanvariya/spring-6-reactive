@@ -37,7 +37,7 @@ public class BeerController {
     Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId,
                                                  @Validated @RequestBody BeerDTO beerDTO){
         return beerService.updateBeer(beerId, beerDTO)
-                .map(savedDTO -> ResponseEntity.ok().build());
+                .map(savedDTO -> ResponseEntity.noContent().build());
     }
 
     @PostMapping(BEER_PATH)
