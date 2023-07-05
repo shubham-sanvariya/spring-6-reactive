@@ -20,7 +20,7 @@ public class BeerController {
 
     @DeleteMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> deleteById(@PathVariable Integer beerId){
-       return beerService.deleteBeerById(beerId).map(response -> ResponseEntity.noContent().build());
+       return beerService.deleteBeerById(beerId).thenReturn(ResponseEntity.noContent().build());
     }
 
     //The @ResponseBody annotation tells a controller that the object returned is automatically serialized into JSON and passed back into the HttpResponse object
