@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import shubh.springframework.spring6reactive.model.BeerDTO;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +15,15 @@ class BeerControllerTest {
 
     @Autowired
     WebTestClient webTestClient;
+
+    @Test
+    void testGetById() {
+        webTestClient.get().uri(BeerController.BEER_PATH_ID, 1)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().valueEquals("Content-type", "application/json")
+                .expectBody(BeerDTO.class);
+    }
 
     @Test
     void testListBeers() {
