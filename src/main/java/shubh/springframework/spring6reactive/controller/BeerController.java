@@ -17,6 +17,15 @@ public class BeerController {
 
     private final BeerService beerService;
 
+    // update our existing resource
+    @PutMapping(BEER_PATH_ID)
+    ResponseEntity<Void> updateExistingBeer(@PathVariable("beerId") Integer beerId,
+                                                  @RequestBody BeerDTO beerDTO){
+         beerService.updateBeer(beerId,beerDTO).subscribe();
+
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping(BEER_PATH)
     Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDTO beerDTO){
        return beerService.saveNewBeer(beerDTO)
