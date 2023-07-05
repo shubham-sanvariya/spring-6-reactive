@@ -17,6 +17,11 @@ public class BeerController {
 
     private final BeerService beerService;
 
+    @DeleteMapping(BEER_PATH_ID)
+    Mono<ResponseEntity<Void>> deleteById(@PathVariable Integer beerId){
+       return beerService.deleteBeerById(beerId).map(response -> ResponseEntity.noContent().build());
+    }
+
     // update our existing resource
     @PutMapping(BEER_PATH_ID)
     ResponseEntity<Void> updateExistingBeer(@PathVariable("beerId") Integer beerId,
