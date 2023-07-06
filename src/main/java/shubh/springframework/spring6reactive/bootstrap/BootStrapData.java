@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import shubh.springframework.spring6reactive.domain.Beer;
+import shubh.springframework.spring6reactive.domain.Customer;
 import shubh.springframework.spring6reactive.repositories.BeerRepository;
+import shubh.springframework.spring6reactive.repositories.CustomerRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,13 +16,40 @@ import java.time.LocalDateTime;
 public class BootStrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
+    private final CustomerRepository customerRepository;
 
     @Override
     public void run(String... args) throws Exception {
         loadBeerData();
+        loadCustomerData();
 
         beerRepository.count().subscribe(count -> {
-            System.out.println("Count is " + count);
+            System.out.println("Beer Count is " + count);
+        });
+
+        customerRepository.count().subscribe(count -> {
+            System.out.println("customer count is " + count);
+        });
+    }
+
+    private void loadCustomerData() {
+        customerRepository.count().subscribe(count -> {
+            if (count == 0) {
+                customerRepository.save(Customer.builder()
+                        .customerName("nanu")
+                        .build())
+                        .subscribe();
+
+                customerRepository.save(Customer.builder()
+                        .customerName("ronit")
+                        .build())
+                        .subscribe();
+
+                customerRepository.save(Customer.builder()
+                        .customerName("shubh")
+                        .build())
+                        .subscribe();
+            }
         });
     }
 
