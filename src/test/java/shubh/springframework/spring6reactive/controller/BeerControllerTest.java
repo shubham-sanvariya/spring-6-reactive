@@ -9,7 +9,9 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import shubh.springframework.spring6reactive.domain.Beer;
 import shubh.springframework.spring6reactive.model.BeerDTO;
+import shubh.springframework.spring6reactive.repositories.BeerRepository;
 import shubh.springframework.spring6reactive.repositories.BeerRepositoryTest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,6 +39,18 @@ class BeerControllerTest {
                 .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
                 .exchange()
                 .expectStatus().isNoContent();
+    }
+
+    @Test
+    void testCreateBeerBadData() {
+        Beer testBeer = BeerRepositoryTest.getTestBeer();
+        testBeer.setBeerName("");
+
+        webTestClient.post().uri(BeerController.BEER_PATH)
+                .body(Mono.just(testBeer),BeerDTO.class)
+                .header("Content-type", "application/json")
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
