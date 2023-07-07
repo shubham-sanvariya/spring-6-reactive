@@ -11,7 +11,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import shubh.springframework.spring6reactive.domain.Beer;
 import shubh.springframework.spring6reactive.model.BeerDTO;
-import shubh.springframework.spring6reactive.repositories.BeerRepository;
 import shubh.springframework.spring6reactive.repositories.BeerRepositoryTest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +29,14 @@ class BeerControllerTest {
         webTestClient.delete().uri(BeerController.BEER_PATH_ID,1)
                 .exchange()
                 .expectStatus().isNoContent();
+    }
+
+    @Test
+    void testUpdateBeerNotFound() {
+        webTestClient.put().uri(BeerController.BEER_PATH_ID,999)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test
