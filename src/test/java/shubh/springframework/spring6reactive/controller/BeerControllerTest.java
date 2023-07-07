@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import shubh.springframework.spring6reactive.domain.Beer;
 import shubh.springframework.spring6reactive.model.BeerDTO;
 import shubh.springframework.spring6reactive.repositories.BeerRepositoryTest;
 
@@ -24,10 +25,38 @@ class BeerControllerTest {
 
     @Test
     @Order(999)
+    void testDeleteByIdNotFound() {
+        webTestClient.delete().uri(BeerController.BEER_PATH_ID,99)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    @Order(999)
     void testDeleteById() {
         webTestClient.delete().uri(BeerController.BEER_PATH_ID,1)
                 .exchange()
                 .expectStatus().isNoContent();
+    }
+
+    @Test
+    void testUpdateBeerNotFound() {
+        webTestClient.put().uri(BeerController.BEER_PATH_ID,999)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    @Order(4)
+    void testUpdateBeerBadData() {
+        Beer testBeerupdate = BeerRepositoryTest.getTestBeer();
+        testBeerupdate.setBeerStyle("");
+
+        webTestClient.put().uri(BeerController.BEER_PATH_ID,1)
+                .body(Mono.just(testBeerupdate), BeerDTO.class)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
@@ -40,6 +69,18 @@ class BeerControllerTest {
     }
 
     @Test
+    void testCreateBeerBadData() {
+        Beer testBeer = BeerRepositoryTest.getTestBeer();
+        testBeer.setBeerName("");
+
+        webTestClient.post().uri(BeerController.BEER_PATH)
+                .body(Mono.just(testBeer),BeerDTO.class)
+                .header("Content-type", "application/json")
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
     void testCreateBeer() {
         webTestClient.post().uri(BeerController.BEER_PATH)
                 .body(Mono.just(BeerRepositoryTest.getTestBeer()),BeerDTO.class)
@@ -47,6 +88,13 @@ class BeerControllerTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().location("http://localhost:8080/api/v2/beer/4");
+    }
+
+    @Test
+    void testGetByIdNotFound() {
+        webTestClient.get().uri(BeerController.BEER_PATH_ID, 9999)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test
