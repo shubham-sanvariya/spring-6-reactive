@@ -33,6 +33,7 @@ class BeerControllerTest {
     }
 
     @Test
+    @Order(4)
     void testUpdateBeerBadData() {
         Beer testBeerupdate = BeerRepositoryTest.getTestBeer();
         testBeerupdate.setBeerStyle("");
@@ -72,6 +73,13 @@ class BeerControllerTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().location("http://localhost:8080/api/v2/beer/4");
+    }
+
+    @Test
+    void testGetByIdNotFound() {
+        webTestClient.get().uri(BeerController.BEER_PATH_ID, 9999)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test
